@@ -2,6 +2,12 @@ import tkinter
 import threading
 from tkinter import ttk
 
+from email.mime.multipart import MIMEMultipart  
+from email.mime.base import MIMEBase  
+from email.mime.text import MIMEText  
+from email.utils import formatdate  
+from email import encoders  
+
 import picamera
 from picamera import PiCamera
 import time
@@ -22,17 +28,55 @@ def quit_everything():
     global preview_on
     root.quit()
     preview_on = False
-    
+
+def send_an_email():  
+    toaddr = 'zkod777@gmail.com'      # To id 
+    me = 'zkod777@gmail.com'          # your id
+    subject = "RASPI PIC"              # Subject
+  
+    msg = MIMEMultipart()  
+    msg['Subject'] = subject  
+    msg['From'] = me  
+    msg['To'] = toaddr  
+    msg.preamble = "test "   
+    #msg.attach(MIMEText(text))  
+  
+    part = MIMEBase('application', "octet-stream")  
+    part.set_payload(open("image1.jpg", "rb").read())  
+    encoders.encode_base64(part)  
+    part.add_header('Content-Disposition', 'attachment; filename="image1.jpg"')   # File name and format name
+    msg.attach(part)  
+  
+    try:  
+       s = smtplib.SMTP('smtp.gmail.com', 587)  # Protocol
+       s.ehlo()  
+       s.starttls()  
+       s.ehlo()  
+       s.login(user = 'zkod777@gmail.com', password = '')  # User id & password
+       #s.send_message(msg)  
+       s.sendmail(me, toaddr, msg.as_string())  
+       s.quit()  
+    #except:  
+    #   print ("Error: unable to send email")    
+    except SMTPException as error:  
+          print ("Error")                # Exception
+
 def take_picture():
     camera.start_preview()
     time.sleep(5)
+    
+    camera.capture('image1.jpg')
+    send_an_email()
+    #camera.stop_preview()
 
+    """
     for effect in camera.IMAGE_EFFECTS:
         filename = "image_%s.jpg" % effect
         camera.image_effect = effect
         camera.capture(filename)
         time.sleep(1)
     camera.stop_preview()
+    """
 
 def select_filter(option):
     effect = ['none', 'negative', 'sketch', 'denoise', 'emboss', 'hatch', 'gpen',
@@ -40,8 +84,7 @@ def select_filter(option):
               'washedout', 'posterise', 'colorpoint', 'colorbalance', 'cartoon',
               'deinterlace1', 'deinterlace2', 'oilpaint', 'solarize']
     camera.image_effect = effect[int(option)]
-    
-    
+
 btn = ttk.Button(
 	root,
 	text = 'Quit',
@@ -49,8 +92,8 @@ btn = ttk.Button(
 )
 
 picBtn = ttk.Button(root,text = 'SMILE!', command = take_picture)
-filterOneBtn = ttk.Button(root, text = 'Clear', command = select_filter(21))
-clearBtn = ttk.Button(root, text = 'Filter 1', command = select_filter(0))
+filterOneBtn = ttk.Button(root, text = 'Filter', command = lambda:select_filter(21))
+clearBtn = ttk.Button(root, text = 'Clear', command = lambda:select_filter(0))
 
 clearBtn.pack(ipadx = 5, ipady = 2, expand = True)
 filterOneBtn.pack(ipadx = 5, ipady = 2, expand = True)
