@@ -35,9 +35,10 @@ def take_picture():
     camera.stop_preview()
 
 def select_filter(option):
-    camera.start_preview()
-    camera.image_effect = "none"
-    effect = ['none', 'negative', 'solarise', 'sketch', 'denoise', 'emboss', 'oilpant', 'hatch', 'gpen', 'pastel', 'watercolour', 'film', 'blur', 'saturation', 'colourswap','washedout', 'posterise', 'colourpoint', 'colourbalance', 'cartoon']
+    effect = ['none', 'negative', 'sketch', 'denoise', 'emboss', 'hatch', 'gpen',
+              'pastel', 'watercolor', 'film', 'blur', 'saturation', 'colorswap',
+              'washedout', 'posterise', 'colorpoint', 'colorbalance', 'cartoon',
+              'deinterlace1', 'deinterlace2', 'oilpaint', 'solarize']
     camera.image_effect = effect[int(option)]
     
     
@@ -48,8 +49,8 @@ btn = ttk.Button(
 )
 
 picBtn = ttk.Button(root,text = 'SMILE!', command = take_picture)
-filterOneBtn = ttk.Button(root, text = 'Clear', command = select_filter(0))
-clearBtn = ttk.Button(root, text = 'Filter 1', command = select_filter(5))
+filterOneBtn = ttk.Button(root, text = 'Clear', command = select_filter(21))
+clearBtn = ttk.Button(root, text = 'Filter 1', command = select_filter(0))
 
 clearBtn.pack(ipadx = 5, ipady = 2, expand = True)
 filterOneBtn.pack(ipadx = 5, ipady = 2, expand = True)
