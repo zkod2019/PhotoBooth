@@ -12,6 +12,8 @@ import picamera
 from picamera import PiCamera
 import time
 
+import smtplib
+
 root = tkinter.Tk()
 root.geometry('300x200')
 root.title('Button Demo')
@@ -30,8 +32,8 @@ def quit_everything():
     preview_on = False
 
 def send_an_email():  
-    toaddr = 'zkod777@gmail.com'      # To id 
-    me = 'zkod777@gmail.com'          # your id
+    toaddr = 'teamassembly2022@gmail.com'      # To id 
+    me = 'teamassembly2022@gmail.com'          # your id
     subject = "RASPI PIC"              # Subject
   
     msg = MIMEMultipart()  
@@ -52,7 +54,7 @@ def send_an_email():
        s.ehlo()  
        s.starttls()  
        s.ehlo()  
-       s.login(user = 'zkod777@gmail.com', password = '')  # User id & password
+       s.login(user = 'teamassembly2022@gmail.com', password = '')  # User id & password
        #s.send_message(msg)  
        s.sendmail(me, toaddr, msg.as_string())  
        s.quit()  
@@ -61,12 +63,38 @@ def send_an_email():
     except SMTPException as error:  
           print ("Error")                # Exception
 
+def try_send():
+    TO = 'teamassembly2022@gmail.com'
+    SUBJECT = 'TEST MAIL'
+    TEXT = 'Here is a message from python.'
+
+    # Gmail Sign In
+    gmail_sender = 'teamassembly2022@gmail.com'
+    gmail_passwd = ''
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+    server.login(gmail_sender, gmail_passwd)
+
+    BODY = '\r\n'.join(['To: %s' % TO,
+                    'From: %s' % gmail_sender,
+                    'Subject: %s' % SUBJECT,
+                    '', TEXT])
+
+try:
+    server.sendmail(gmail_sender, [TO], BODY)
+    print ('email sent')
+except:
+    print ('error sending mail')
+
 def take_picture():
     camera.start_preview()
     time.sleep(5)
     
     camera.capture('image1.jpg')
-    send_an_email()
+    try_send()
+    #send_an_email()
     #camera.stop_preview()
 
     """
