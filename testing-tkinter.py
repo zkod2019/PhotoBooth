@@ -2,6 +2,7 @@ import tkinter
 import threading
 from tkinter import ttk
 
+#https://www.delftstack.com/howto/python/mimemultipart-python/
 from email.mime.multipart import MIMEMultipart  
 from email.mime.base import MIMEBase  
 from email.mime.text import MIMEText  
@@ -32,69 +33,41 @@ def quit_everything():
     preview_on = False
 
 def send_an_email():  
-    toaddr = 'zkod777@gmail.com'      # To id 
-    me = 'teamassembly2022@gmail.com'          # your id
-    subject = "RASPI PIC"              # Subject
-  
-    msg = MIMEMultipart()  
-    msg['Subject'] = subject  
-    msg['From'] = me  
-    msg['To'] = toaddr  
-    msg.preamble = "test "   
-    #msg.attach(MIMEText(text))  
-  
-    part = MIMEBase('application', "octet-stream")  
-    part.set_payload(open("image1.jpg", "rb").read())  
-    encoders.encode_base64(part)  
-    part.add_header('Content-Disposition', 'attachment; filename="image1.jpg"')   # File name and format name
-    msg.attach(part)  
-  
-    try:  
-       #s = smtplib.SMTP('smtp.gmail.com', 587)  # Protocol
-       s = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-       s.ehlo()  
-       s.starttls()  
-       s.ehlo()  
-       s.login(user = 'teamassembly2022@gmail.com', password = '')  # User id & password
-       #s.send_message(msg)  
-       s.sendmail(me, toaddr, msg.as_string())  
-       s.quit()  
-    #except:  
-    #   print ("Error: unable to send email")    
-    except SMTPException as error:  
-          print ("Error")                # Exception
-
-def try_send():
-    TO = 'teamassembly2022@gmail.com'
-    SUBJECT = 'TEST MAIL'
-    TEXT = 'Here is a message from python.'
+    toaddr = 'zkod777@gmail.com'
+    subject = 'TEST PI PICS'
 
     # Gmail Sign In
     gmail_sender = 'teamassembly2022@gmail.com'
-    gmail_passwd = ''
-
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.ehlo()
-    server.starttls()
-    server.login(gmail_sender, gmail_passwd)
-
-    BODY = '\r\n'.join(['To: %s' % TO,
-                    'From: %s' % gmail_sender,
-                    'Subject: %s' % SUBJECT,
-                    '', TEXT])
-
-try:
-    server.sendmail(gmail_sender, [TO], BODY)
-    print ('email sent')
-except:
-    print ('error sending mail')
+    gmail_passwd = 'pwyjogittqqadvgk'
+  
+    msg = MIMEMultipart()  #MIMEMultipart supports use of many content types (texts/images withint HTML)
+    msg['Subject'] = subject  
+    msg['From'] = gmail_sender  
+    msg['To'] = toaddr  
+    msg.preamble = "test "   
+  
+    part = MIMEBase('application', "octet-stream")  #MIMEBase used as base class
+    part.set_payload(open("image1.jpg", "rb").read())  
+    encoders.encode_base64(part)  
+    part.add_header('Content-Disposition', 'attachment; filename="image1.jpg"')   # File name and format name
+    msg.attach(part)
+  
+    try:  
+       s = smtplib.SMTP('smtp.gmail.com', 587)  # Protocol
+       s.ehlo()  
+       s.starttls()  
+       s.ehlo()  
+       s.login(gmail_sender, gmail_passwd)  # User id & password
+       s.sendmail(gmail_sender, toaddr, msg.as_string())  
+       s.quit()      
+    except SMTPException as error:  
+          print ("Error")                # Exception
 
 def take_picture():
     camera.start_preview()
     time.sleep(5)
     
     camera.capture('image1.jpg')
-    #try_send()
     send_an_email()
     #camera.stop_preview()
 
