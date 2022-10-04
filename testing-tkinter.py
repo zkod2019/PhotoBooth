@@ -32,7 +32,7 @@ def quit_everything():
     preview_on = False
 
 def send_an_email():  
-    toaddr = 'teamassembly2022@gmail.com'      # To id 
+    toaddr = 'zkod777@gmail.com'      # To id 
     me = 'teamassembly2022@gmail.com'          # your id
     subject = "RASPI PIC"              # Subject
   
@@ -50,7 +50,8 @@ def send_an_email():
     msg.attach(part)  
   
     try:  
-       s = smtplib.SMTP('smtp.gmail.com', 587)  # Protocol
+       #s = smtplib.SMTP('smtp.gmail.com', 587)  # Protocol
+       s = smtplib.SMTP_SSL('smtp.gmail.com', 465)
        s.ehlo()  
        s.starttls()  
        s.ehlo()  
@@ -93,8 +94,8 @@ def take_picture():
     time.sleep(5)
     
     camera.capture('image1.jpg')
-    try_send()
-    #send_an_email()
+    #try_send()
+    send_an_email()
     #camera.stop_preview()
 
     """
