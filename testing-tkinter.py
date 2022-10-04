@@ -1,6 +1,7 @@
 import tkinter
 import threading
 from tkinter import ttk
+from tkinter import messagebox
 
 #https://www.delftstack.com/howto/python/mimemultipart-python/
 from email.mime.multipart import MIMEMultipart  
@@ -32,6 +33,9 @@ def quit_everything():
     root.quit()
     preview_on = False
 
+def pop_up():
+   messagebox.showinfo("INFO", "Check your email to see your picture!")
+
 def send_an_email():  
     toaddr = 'zkod777@gmail.com'
     subject = 'TEST PI PICS'
@@ -59,7 +63,8 @@ def send_an_email():
        s.ehlo()  
        s.login(gmail_sender, gmail_passwd)  # User id & password
        s.sendmail(gmail_sender, toaddr, msg.as_string())  
-       s.quit()      
+       s.quit()
+       pop_up()
     except SMTPException as error:  
           print ("Error")                # Exception
 
